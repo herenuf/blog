@@ -1,0 +1,67 @@
+{% extends 'layout.html' %}
+{% block main%}
+
+<ol class="breadcrumb">
+    <li><a href="#">管理首页</a></li>
+    <li><span>内容修改</span></li>
+</ol>
+<h3>内容修改 -{{content.title}}</h3>
+<form role="form" method="post">
+    <div class="form-group">
+        <label for="title">分类：</label>
+        <select name="category" id="category" class="form-control">
+            {% for category in categories%}
+                {% if content.category._id.toString() == category._id.toString() %}
+                    <option value="{{category.id}}" selected>{{category.name}}</option>
+                {% else %}
+                    <option value="{{category.id}}">{{category.name}}</option>
+                {% endif %}
+                
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="title">标题：</label>
+        <input type="text" value="{{content.title}}" class="form-control" id="title" placeholder="请输入内容标题" name="title" />
+    </div>
+    <div class="form-group">
+        <label for="title">简介：</label>
+        <textarea name="description" id="description" class="form-control" rows="5" placeholder="请输入内容简介">{{content.description}}</textarea>
+    </div>
+    <div class="form-group">
+        <label for="content">内容：</label>
+        <!-- <textarea name="content" id="content" class="form-control" rows="10" placeholder="请输入内容">{{content.content}}</textarea> -->
+        <div id="div1">
+            <p>欢迎使用 <b>wangEditor</b> 富文本编辑器</p>
+        </div>
+        <textarea id="content" name="content" class="form-control" rows="8" placeholder="请输入内容" style="resize:none">{{content.content}}</textarea>
+        
+    </div>
+    <!-- <button type="submit" class="btn btn-default" id="submitBtn">提交</button> -->
+    <button class="btn btn-default" id="submitBtn">提交</button>
+</form>
+
+
+{% endblock %}
+
+
+{% block editor%}
+<link rel="stylesheet" href="/public/css/wangEditor.min.css">
+<script src="/public/js/wangEditor.min.js"></script>
+<script>
+        var E = window.wangEditor
+        var editor = new E('#div1');
+        // 关闭js过滤
+        // editor.config.jsFilter = false;
+        var $text1 = $('#content');
+        editor.customConfig.uploadImgShowBase64 = true
+        editor.customConfig.onchange = function (html) {
+            // 监控变化，同步更新到 textarea
+            $text1.val(html)
+        }
+        editor.create()
+        // 初始化 textarea 的值
+        $text1.val(editor.txt.html())
+    // })
+</script>
+{% endblock %}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<title>Blog</title>
+	<link href="/public/boot/css/bootstrap.css" rel="stylesheet">
+	<link rel="stylesheet" href="/public/css/main.css" />
+</head>
+
+<body class="home-template">
+	<div class="main-header">
+
+	</div>
+	<div class="navbar-inverse">
+		<div class="container container-nav">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed" type="button" data-toggle='collapse' data-target='.navbar-collapse'>
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a href="javascript:void(0)" class="navbar-brand hidden-sm">博客 Ren Fu</a>
+			</div>
+			<div class="navbar-collapse collapse" role="navigation">
+				<nav>
+					<!--左边-->
+					<ul class="nav navbar-nav">
+						{% if category%}
+							<li class="hidden-sm hidden-md">
+								<a href="/">首页</a>
+							</li>
+						{% else %}
+							<li class="hidden-sm hidden-md">
+								<a href="/" class="focus">首页</a>
+							</li>
+						{% endif %}
+						
+						{% for cate in categories %}
+							{% if category == cate.id%}
+								<li class="hidden-sm hidden-md">
+									<a href="/?category={{cate.id}}" class="focus">{{cate.name}}</a>
+								</li>
+							{% else %}
+								<li class="hidden-sm hidden-md">
+									<a href="/?category={{cate.id}}">{{cate.name}}</a>
+								</li>
+							{% endif %}
+							
+						{% endfor %}
+					</ul>
+					<!--右边-->
+					{% if userInfo._id %}
+					<!-- 登录成功的操作 -->
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							{% if userInfo.isAdmin %}
+							<a href="/admin">
+								<span class="glyphicon glyphicon-user"></span> {{userInfo.username}} <span>进入管理</span>
+							</a>
+							{% else %}
+							<a href="javascript:void(0)">
+								<span class="glyphicon glyphicon-user"></span> {{userInfo.username}} <span>欢迎光临我的博客</span>
+							</a>
+							{% endif %}
+						</li>
+						<li>
+							<a href="javascript:void(0)" id="logout">
+							 退出</a>
+						</li>
+					</ul>
+					{% else %}
+					<ul class="nav navbar-nav navbar-right">
+						<li>
+							<a class="register" href="javascript:void(0)">
+								<span class="glyphicon glyphicon-user"></span> 注册</a>
+						</li>
+						<li>
+							<a class="login" href="javascript:void(0)">
+								<span class="glyphicon glyphicon-log-in"></span> 登录</a>
+						</li>
+					</ul>
+					{% endif %}
+				</nav>
+			</div>
+		</div>
+	</div>
+	<!-- 注册窗口 -->
+	<div id="register" style="display:none" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<div class="modal-title">
+					<h1 class="text-center">注册</h1>
+				</div>
+				<div class="modal-body">
+					<form class="form-group">
+						<div class="form-group has-feedback">
+							<label for="username">用户名</label>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-user"></span>
+								</span>
+								<input id="username" class="form-control" placeholder="请输入用户名" maxlength="20" type="text">
+							</div>
+
+							<span style="color:red;display: none;" class="tips"></span>
+							<span style="display: none;" class=" glyphicon glyphicon-remove form-control-feedback"></span>
+							<span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="password">密码</label>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-lock"></span>
+								</span>
+								<input id="password" class="form-control" placeholder="请输入密码" maxlength="20" type="password">
+							</div>
+
+							<span style="color:red;display: none;" class="tips"></span>
+							<span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+							<span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="passwordConfirm">确认密码</label>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-lock"></span>
+								</span>
+								<input id="passwordConfirm" class="form-control" placeholder="请再次输入密码" maxlength="20" type="password">
+							</div>
+							<span style="color:red;display: none;" class="tips"></span>
+							<span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+							<span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+						</div>
+						<div class="row row-reg">
+							<div class="col-xs-7">
+								<div class="form-group has-feedback">
+									<label for="idcode-btn">验证码</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-qrcode"></span>
+										</span>
+										<input id="idcode-btn" class="form-control input-code" placeholder="请输入验证码" maxlength="4" type="text">
+									</div>
+									<span style="color:red;display: none;" class="tips"></span>
+									<span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+									<span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+								</div>
+							</div>
+							<div class="col-xs-5" style="padding-top: 30px;padding-left: 0;padding-right: 0;">
+								<div id="idcode" style="background: transparent;"></div>
+							</div>
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="phoneNum">手机号码</label>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-phone"></span>
+								</span>
+								<input id="phoneNum" class="form-control" placeholder="请输入手机号码" maxlength="11" type="text">
+							</div>
+							<span style="color:red;display: none;" class="tips"></span>
+							<span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+							<span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+						</div>
+
+						<div class="row row-reg">
+							<div class="col-xs-7">
+								<div class="form-group has-feedback">
+									<label for="idcode-btn">校验码</label>
+									<div class="input-group">
+										<span class="input-group-addon">
+											<span class="glyphicon glyphicon-qrcode"></span>
+										</span>
+										<input id="idcode-btn1" class="form-control input-code" placeholder="请输入校验码" maxlength="6" type="text">
+									</div>
+									<span style="color:red;display: none;" class="tips"></span>
+									<span style="display: none;" class="glyphicon glyphicon-remove form-control-feedback"></span>
+									<span style="display: none;" class="glyphicon glyphicon-ok form-control-feedback"></span>
+								</div>
+							</div>
+							<div class="col-xs-5 text-center" style="padding-top: 24px">
+								<button type="button" id="loadingButton" class="btn btn-primary" autocomplete="off">获取短信校验码</button>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<input class="form-control btn btn-primary" id="submit" value="立&nbsp;&nbsp;即&nbsp;&nbsp;注&nbsp;&nbsp;册" type="button" />
+						</div>
+
+						<div class="form-group form-bottom">
+							<input value="重置" id="reset" class="form-control btn btn-danger" type="reset">
+						</div>
+						<a href="javascript:void(0)" class="tab-login">已有账号？立即登录</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 登录窗口 -->
+	<div id="login" style="display:none" class="modal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body">
+					<button class="close">
+						<span>&times;</span>
+					</button>
+				</div>
+				<div class="modal-title">
+					<h1 class="text-center">登录</h1>
+				</div>
+				<div class="modal-body">
+					<form class="form-group" action="">
+						<div class="form-group">
+							<label for="">用户名</label>
+							<input class="form-control" type="text" placeholder="" id="userLogin">
+						</div>
+						<div class="form-group">
+							<label for="">密码</label>
+							<input class="form-control" type="password" placeholder="" id="userPwd">
+						</div>
+						<div class="text-right">
+							<button class="btn btn-primary" type="button" id="userInfoLogin">登录</button>
+							<button class="btn btn-danger cancel">取消</button>
+						</div>
+						<a href="javascript:void(0)" class="tab-register">还没有账号？点我注册</a>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<section class="content-wrap">
+		<div class="container">
+			<div class="row">
+				<!--左边内容-->
+				<main class="col-md-8 main-content">
+					{% block content %}{% endblock %}
+				</main>
+				<!--右边-->
+				<aside class="col-md-4 sidebar">
+					<div class="widget">
+						<h4 class="title">社区</h4>
+						<div class="content community">
+							<p>QQ群：241813734</p>
+							<p>
+								<a href="#">问答社区</a>
+							</p>
+							<p>
+								<a href="#">官网微博</a>
+							</p>
+						</div>
+					</div>
+					<div class="widget">
+						<h4 class="title">下载 Ghost</h4>
+						<div class="content download">
+							<a href="#" class="btn btn-default btn-block">Ghost 中文版（0.5.9）</a>
+						</div>
+					</div>
+					<div class="widget">
+						<h4 class="title">标签云</h4>
+						<div class="content tag-cloud">
+							<a href="">Ghost</a>
+							<a href="">新版本发布</a>
+							<a href="">JavaScript</a>
+							<a href="">主题</a>
+							<a href="">上传</a>
+							<a href="">静态</a>
+							<a href="">Ghost</a>
+							<a href="">Ghost</a>
+							<a href="">Ghost</a>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</section>
+	<!--底部-->
+	<footer class="blog-footer">
+		<p>Blog template built for
+			<a href="">Bootstrap</a> by
+			<a href="">@mdo</a>
+		</p>
+		<p>
+			<a href="">Back to top</a>
+		</p>
+	</footer>
+	<!--页脚结束-->
+	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+	<!-- Include all compiled plugins (below), or include individual files as needed -->
+	<script src="/public/boot/js/bootstrap.min.js"></script>
+	<script src="/public/js/index.js"></script>
+	<script src="/public/js/comment.js"></script>
+</body>
+
+</html>
+{% block edd%}
+
+{% endblock %}

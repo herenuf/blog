@@ -1,0 +1,51 @@
+{% extends 'layout.html'%}
+
+{% block content %}
+	{% for content in contents %}
+	<article class="post">
+		<div class="post-head">
+			<h1 class="post-title">
+				<a href="#">{{content.title}}</a>
+			</h1>
+			<div class="post-meta">
+				<span class="author">&nbsp;&nbsp;&nbsp;作者：<a href="javascript:void(0)">{{content.user.username}}</a>
+				</span>
+				<time class="post-date">&nbsp;&nbsp;&nbsp;日期：{{content.addTime|date('Y年m月d日 H:i:s',-8*60)}}</time>
+				<span class="author">&nbsp;&nbsp;&nbsp;阅读：{{content.views}}</span><span class="author">&nbsp;&nbsp;&nbsp;评论：{{content.comments.length}}</span>
+			</div>
+		</div>
+		<div class="post-content">
+			<p>{{content.description}}</p>
+		</div>
+		<div class="post-permalink">
+			<a href="/view?contentid={{content.id}}" class="btn btn-default">阅读全文</a>
+		</div>
+	</article>
+	{% endfor %}
+	<!--分页-->
+	<nav aria-label="...">
+		<ul class="pager">
+			<li>
+				{% if page<=1 %}
+					<span>没有了上一页</span>
+				{% else %}
+					<a href="/?category={{category}}&page={{page-1}}">上一页</a>
+				{% endif %}
+			</li>
+			<li>
+				{% if pages >0 %}
+					<strong>{{page}} / {{pages}}</strong>
+				{% else %}
+					
+				{% endif %}
+			</li>
+			<li>
+				{% if page>=pages %}
+					<span>没有下一页了</span>
+				{% else %}
+					<a href="/?category={{category}}&page={{page+1}}">下一页</a>
+				{% endif %}
+			</li>
+		</ul>
+	</nav>
+{% endblock %}
